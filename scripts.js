@@ -409,7 +409,6 @@ function main() {
             let scr = scores[i].split(':')[1];
 
             if (name === playerName) {
-                console.log('playerName');
                 scorelist[i].getElementsByTagName('td')[0].className = 'place bold';
                 scorelist[i].getElementsByTagName('td')[1].className = 'name bold';
                 scorelist[i].getElementsByTagName('td')[2].className = 'score bold';
