@@ -1,0 +1,185 @@
+body {
+    margin: 0;
+    padding: 0;
+    background-color: lightblue;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+td {
+    padding: 0;
+    margin: 0;
+    width: 12px;
+    height: 12px;
+    background-color: white;
+    border: 8px solid white;
+}
+
+.field {
+    border-collapse: separate;
+    border-spacing: 0;
+}
+
+#comingUp {
+    margin-bottom: 1em;
+    border: 12px solid white;
+}
+
+.column {
+    display: inline-block;
+    vertical-align: top;
+    position: relative;
+    margin: 1em 0 0 1em;
+}
+
+.button {
+    padding: 4px 0;
+    width: 100%;
+    background-color: slateblue;
+    border-color: slateblue;
+    color: white;
+    font-size: 14px;
+}
+
+    .button:disabled,
+    .button[disabled] {
+        background-color: lightblue;
+    }
+
+.textbox {
+    margin: 0;
+    padding: 5px 6px 4px 6px;
+    width: calc(100% - 12px);
+    background-color: slateblue;
+    color: white;
+    font-size: 16px;
+    font-weight: 600;
+}
+
+.whitesquare {
+    margin: 0 0 1em 0;
+    padding: 5px 6px 4px 6px;
+    width: calc(100% - 12px);
+    background-color: white;
+    color: slateblue;
+    font-size: 16px;
+    font-weight: 600;
+    text-align: right;
+}
+
+.pausescreen {
+    position: absolute;
+    top: 0;
+    left: 0;
+    margin: 0;
+    background-color: white;
+    z-index: 9999;
+    display: none;
+}
+
+#pausetext {
+    padding: 0;
+    margin-top: 353px;
+    text-align: center;
+    color: slateblue;
+    font-size: 20px;
+    font-weight: 600;
+}
+
+#pause-big {
+    width: 280px;
+    height: 728px;
+}
+
+#pause-small {
+    top: 27px;
+    width: 136px;
+    height: 136px;
+}
+
+#highscore {
+    display: none;
+}
+
+#scorelist {
+    text-align: left;
+}
+
+    #scorelist thead td  {
+        font-weight: 600;
+    }
+
+    .user > td {
+        border: none;
+        padding: 2px 5px;
+        font-weight: 300;
+    }
+
+#playerBox {
+    margin: 0 -5px 0 0;
+    padding: 4px;
+    width: 98px;
+    display: inline-block;
+}
+
+#nameBox {
+    margin: 0 0 1em 0;
+    display: none;
+}
+
+#playerName {
+    width: 90px;
+}
+
+#submitName {
+    width: 30px;
+    display: inline-block;
+}
+
+.name {
+    width: 200px;
+}
+
+.score {
+    text-align: right;
+}
+
+.bold {
+    font-weight: 600 !important;
+}
+
+.white {
+    background-color: slateblue;
+    border-color: slateblue;
+}
+
+.red {
+    background-color: lightblue; 
+    border-color: slateblue;
+}
+
+.blue {
+    background-color: slateblue;
+    border-color: lightblue;
+}
+
+.green {
+    background-color: white;
+    border-color: slateblue;
+}
+
+.turquoise {
+    background-color: white;
+    border-color: lightblue;
+}
+
+.yellow {
+    background-color: lightblue;
+    border-color: slateblue;
+    border-style: double;
+}
+
+.purple {
+    background-color: slateblue;
+    border-color: lightblue;
+    border-style: double;
+}

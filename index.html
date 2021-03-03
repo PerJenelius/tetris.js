@@ -1,0 +1,60 @@
+<!doctype html>
+
+<html lang="sv">
+    <head>
+        <meta charset="utf-8">
+        <meta name="description" content="TetrisJs">
+        <meta name="author" content="www.jenelius.se 2020">
+        <title>Tetris Js 1.0</title>
+        <link rel="stylesheet" href="styles.css">
+    </head>
+
+    <body>
+        <div class="column">
+            <div class="pausescreen" id="pause-big">
+                <p id="pausetext">paused</p>
+            </div>
+            <table class="field" id="playingfield"></table>
+        </div>
+        <div class="column">
+            <p class="textbox">Next block</p>
+            <div class="pausescreen" id="pause-small"></div>
+            <table class="field" id="comingUp"></table>
+            <p class="textbox">Score</p>
+            <p class="whitesquare" id="score">0</p>
+            <p class="textbox">Level</p>
+            <p class="whitesquare" id="level">1</p>
+            <div id="nameBox">
+                <p class="textbox">Player name</p>
+                <p class="whitesquare" id="playerBox">
+                    <input type="text" id="playerName">
+                </p>
+                <input type="button" class="button" id="submitName" value="OK">
+            </div>
+            <input type="button" class="button" id="newGame" value="New Game">
+        </div>
+        <div class="column" id="highscore">
+            <p class="textbox">Highscore</p>
+            <div class="whitesquare">
+                <table id="scorelist">
+                    <thead>
+                        <tr class="user"><td>Place</td><td>Name</td><td>Score</td></tr>
+                    </thead>
+                    <tbody>
+                        <tr class="user"><td class="place">1</td><td class="name">Jean Pierre Polnareff</td><td class="score">51200</td></tr>
+                        <tr class="user"><td class="place">2</td><td class="name">Noriaki Kakyoin</td><td class="score">25600</td></tr>
+                        <tr class="user"><td class="place">3</td><td class="name">Mohammed Avdol</td><td class="score">12800</td></tr>
+                        <tr class="user"><td class="place">4</td><td class="name">Suzi Q</td><td class="score">6400</td></tr>
+                        <tr class="user"><td class="place">5</td><td class="name">Lisa Lisa</td><td class="score">3200</td></tr>
+                        <tr class="user"><td class="place">6</td><td class="name">Rudol von Stroheim</td><td class="score">1600</td></tr>
+                        <tr class="user"><td class="place">7</td><td class="name">Will A Zeppeli</td><td class="score">800</td></tr>
+                        <tr class="user"><td class="place">8</td><td class="name">Robert E O Speedwagon</td><td class="score">400</td></tr>
+                        <tr class="user"><td class="place">9</td><td class="name">Dio Brando</td><td class="score">200</td></tr>
+                        <tr class="user"><td class="place">10</td><td class="name">Jonathan Joestar</td><td class="score">100</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <script src="scripts.js"></script>
+    </body>
+</html>
