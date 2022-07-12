@@ -1,17 +1,20 @@
-const columnCount = 10,
-      rowCount = 26,
-      storage = typeof(Storage) !== "undefined";
+'use strict';
 
-let playerName,
-    interval,
-    score,
-    level,
-    currentBlock,
-    nextBlock,
-    blockMover,
-    running,
-    bricks = [],
-    scores = [];
+const app = {
+    storage: typeof(Storage) !== "undefined",
+    columnCount: 10,
+    rowCount: 26,
+    bricks: [],
+    scores: [],
+    playerName: '',
+    interval: 0,
+    score: 0,
+    level: 0,
+    currentBlock: '',
+    nextBlock: '',
+    blockMover: null,
+    running: false
+};
 
 const main = () => {
     drawBoard();
@@ -20,10 +23,10 @@ const main = () => {
 }
 
 const drawBoard = () => {
-    for(let y = 1; y <= rowCount; y++) {
+    for(let y = 1; y <= app.rowCount; y++) {
         let row = document.getElementById('playingfield').insertRow();
 
-        for(let x = 1; x <= columnCount; x++) {
+        for(let x = 1; x <= app.columnCount; x++) {
             let td = row.insertCell();
             td.id = x + ',' + y;
             td.className = 'empty';
@@ -42,7 +45,7 @@ const drawBoard = () => {
 }
 
 const setHighscores = () => {
-    if (storage) {
+    if (app.storage) {
         let scorelist = document.getElementById('scorelist').getElementsByTagName('tbody')[0].getElementsByTagName('tr');
         let savedList;
 
@@ -103,7 +106,7 @@ const spawnBlock = (block) => {
 
     newBricks[0].className = newBricks[1].className = newBricks[2].className = newBricks[3].className = block;
 
-    return running ? newBricks : null;
+    return app.running ? newBricks : null;
 }
 
 const drawBricks = (block) => {
@@ -136,11 +139,11 @@ const checkBricks = (block) => {
 
 const moveBlock = (direction) => {
     let newBricks = [];
-    let className = bricks[0].getAttribute('class');
+    let className = app.bricks[0].getAttribute('class');
 
-    for (let i = 0; i < bricks.length; i++) {
-        let oldBrickX = parseInt(bricks[i].id.split(',')[0]);
-        let oldBrickY = parseInt(bricks[i].id.split(',')[1]);
+    for (let i = 0; i < app.bricks.length; i++) {
+        let oldBrickX = parseInt(app.bricks[i].id.split(',')[0]);
+        let oldBrickY = parseInt(app.bricks[i].id.split(',')[1]);
         let newBrick = null;
 
         switch (direction) {
@@ -153,7 +156,7 @@ const moveBlock = (direction) => {
                 }
             }; break;
             case 'right': {
-                if ((oldBrickX + 1) <= columnCount) {
+                if ((oldBrickX + 1) <= app.columnCount) {
                     newBrick = document.getElementById((oldBrickX + 1) + ',' + oldBrickY);
                 }
             }; break;
@@ -163,12 +166,12 @@ const moveBlock = (direction) => {
     }
 
     if (checkBricks(newBricks)) {
-        for (let i = 0; i < bricks.length; i++) {
-            bricks[i].className = 'empty';
+        for (let i = 0; i < app.bricks.length; i++) {
+            app.bricks[i].className = 'empty';
         }
-        for (let i = 0; i < bricks.length; i++) {
-            bricks[i] = newBricks[i];
-            bricks[i].className = className;
+        for (let i = 0; i < app.bricks.length; i++) {
+            app.bricks[i] = newBricks[i];
+            app.bricks[i].className = className;
         }
     } else {
         if (direction === 'down') {
@@ -178,23 +181,23 @@ const moveBlock = (direction) => {
 }
 
 const rotateBlock = (direction) => {
-    let oldBrickX = parseInt(bricks[0].id.split(',')[0]);
-    let oldBrickY = parseInt(bricks[0].id.split(',')[1]);
-    let className = bricks[0].getAttribute('class');
+    let oldBrickX = parseInt(app.bricks[0].id.split(',')[0]);
+    let oldBrickY = parseInt(app.bricks[0].id.split(',')[1]);
+    let className = app.bricks[0].getAttribute('class');
     let newBlock = [];
 
-    if (currentBlock !== 'blue') {
-        newBlock[0] = bricks[0];
+    if (app.currentBlock !== 'blue') {
+        newBlock[0] = app.bricks[0];
 
-        for (let i = 1; i < bricks.length; i++) {
-            let diffX = parseInt(bricks[i].id.split(',')[0]) - oldBrickX;
-            let diffY = parseInt(bricks[i].id.split(',')[1]) - oldBrickY;
+        for (let i = 1; i < app.bricks.length; i++) {
+            let diffX = parseInt(app.bricks[i].id.split(',')[0]) - oldBrickX;
+            let diffY = parseInt(app.bricks[i].id.split(',')[1]) - oldBrickY;
 
             if (direction === 'clockwise') {
-                if (diffX === 0 && diffY < 0 && oldBrickX + Math.abs(diffY) <= columnCount) { newBlock[i] = document.getElementById((oldBrickX + Math.abs(diffY)) + ',' + oldBrickY);
-                } else if (diffX > 0 && diffY < 0 && oldBrickY + Math.abs(diffY) <= rowCount) {
+                if (diffX === 0 && diffY < 0 && oldBrickX + Math.abs(diffY) <= app.columnCount) { newBlock[i] = document.getElementById((oldBrickX + Math.abs(diffY)) + ',' + oldBrickY);
+                } else if (diffX > 0 && diffY < 0 && oldBrickY + Math.abs(diffY) <= app.rowCount) {
                     newBlock[i] = document.getElementById((oldBrickX + Math.abs(diffX)) + ',' + (oldBrickY + Math.abs(diffY)));
-                } else if (diffX > 0 && diffY === 0 && oldBrickY + Math.abs(diffX) <= rowCount) {
+                } else if (diffX > 0 && diffY === 0 && oldBrickY + Math.abs(diffX) <= app.rowCount) {
                     newBlock[i] = document.getElementById(oldBrickX + ',' + (oldBrickY + Math.abs(diffX)));
                 } else if (diffX > 0 && diffY > 0 && oldBrickX - Math.abs(diffX) > 0) {
                     newBlock[i] = document.getElementById((oldBrickX - Math.abs(diffX)) + ',' + (oldBrickY + Math.abs(diffY)));
@@ -204,7 +207,7 @@ const rotateBlock = (direction) => {
                     newBlock[i] = document.getElementById((oldBrickX - Math.abs(diffX)) + ',' + (oldBrickY - Math.abs(diffY)));
                 } else if (diffX < 0 && diffY === 0 && oldBrickY - Math.abs(diffX) > 0) {
                     newBlock[i] = document.getElementById(oldBrickX + ',' + (oldBrickY - Math.abs(diffX)));
-                } else if (diffX < 0 && diffY < 0 && oldBrickX + Math.abs(diffY) <= columnCount) {
+                } else if (diffX < 0 && diffY < 0 && oldBrickX + Math.abs(diffY) <= app.columnCount) {
                     newBlock[i] = document.getElementById((oldBrickX + Math.abs(diffX)) + ',' + (oldBrickY - Math.abs(diffY)));
                 }
             } else {
@@ -216,34 +219,34 @@ const rotateBlock = (direction) => {
                     newBlock[i] = document.getElementById(oldBrickX + ',' + (oldBrickY - Math.abs(diffX)));
                 } else if (diffX > 0 && diffY > 0 && oldBrickY - Math.abs(diffY) > 0) {
                     newBlock[i] = document.getElementById((oldBrickX + Math.abs(diffX)) + ',' + (oldBrickY - Math.abs(diffY)));
-                } else if (diffX === 0 && diffY > 0 && oldBrickX + Math.abs(diffY) <= columnCount) {
+                } else if (diffX === 0 && diffY > 0 && oldBrickX + Math.abs(diffY) <= app.columnCount) {
                     newBlock[i] = document.getElementById((oldBrickX + Math.abs(diffY) + ',' + oldBrickY));
-                } else if (diffX < 0 && diffY > 0 && oldBrickX + Math.abs(diffX) <= columnCount) {
+                } else if (diffX < 0 && diffY > 0 && oldBrickX + Math.abs(diffX) <= app.columnCount) {
                     newBlock[i] = document.getElementById((oldBrickX + Math.abs(diffX)) + ',' + (oldBrickY + Math.abs(diffY)));
-                } else if (diffX < 0 && diffY === 0 && oldBrickY + Math.abs(diffX) <= rowCount) {
+                } else if (diffX < 0 && diffY === 0 && oldBrickY + Math.abs(diffX) <= app.rowCount) {
                     newBlock[i] = document.getElementById(oldBrickX + ',' + (oldBrickY + Math.abs(diffX)));
-                } else if (diffX < 0 && diffY < 0 && oldBrickY + Math.abs(diffY) <= rowCount) {
+                } else if (diffX < 0 && diffY < 0 && oldBrickY + Math.abs(diffY) <= app.rowCount) {
                     newBlock[i] = document.getElementById((oldBrickX - Math.abs(diffX)) + ',' + (oldBrickY + Math.abs(diffY)));
                 }
             }
         }
 
         if (newBlock.length === 4 && checkBricks(newBlock)) {
-            for (let i = 0; i < bricks.length; i++) {
-                bricks[i].className = 'empty';
+            for (let i = 0; i < app.bricks.length; i++) {
+                app.bricks[i].className = 'empty';
             }
     
-            for (let i = 0; i < bricks.length; i++) {
-                bricks[i] = newBlock[i];
-                bricks[i].className = className;
+            for (let i = 0; i < app.bricks.length; i++) {
+                app.bricks[i] = newBlock[i];
+                app.bricks[i].className = className;
             }
         }
     }
 }
 
 const stopBlock = () => {
-    for (let i = 0; i < bricks.length; i++) {
-        bricks[i].className += ' fixed';
+    for (let i = 0; i < app.bricks.length; i++) {
+        app.bricks[i].className += ' fixed';
     }
 
     checkForLines();
@@ -251,10 +254,10 @@ const stopBlock = () => {
 }
 
 const setNextBlock = () => {
-    currentBlock = nextBlock;
-    nextBlock = randomizeBlock();
-    showNext(nextBlock);
-    bricks = spawnBlock(currentBlock);
+    app.currentBlock = app.nextBlock;
+    app.nextBlock = randomizeBlock();
+    showNext(app.nextBlock);
+    app.bricks = spawnBlock(app.currentBlock);
 }
 
 const randomizeBlock = () => {
@@ -274,17 +277,17 @@ const randomizeBlock = () => {
 const checkForLines = () => {
     var fullRows = [];
 
-    for (let row = 1; row <= rowCount; row++) {
+    for (let row = 1; row <= app.rowCount; row++) {
         let brickCount = 0;
 
-        for (let col = 1; col <= columnCount; col++) {
+        for (let col = 1; col <= app.columnCount; col++) {
             var checkBrick = document.getElementById(col + ',' + row);
             if (checkBrick.getAttribute('class').split(' ')[1] === 'fixed') {
                 ++brickCount;
             }
         }
 
-        if (brickCount === columnCount) {
+        if (brickCount === app.columnCount) {
             fullRows.push(row);
         }
     }
@@ -299,7 +302,7 @@ const checkForLines = () => {
 }
 
 const destroyRow = (rowNumber) => {
-    for (let col = 1; col <= columnCount; col++) {
+    for (let col = 1; col <= app.columnCount; col++) {
         var destroyBrick = document.getElementById(col + ',' + rowNumber);
         destroyBrick.className = 'empty';
     }
@@ -336,24 +339,24 @@ const moveRows = (fullRows) => {
 }
 
 const updateScore = (addScore) => {
-    score += addScore;
-    document.getElementById('score').innerText = score;
+    app.score += addScore;
+    document.getElementById('score').innerText = app.score;
     updateLevel();
 }
 
 const updateLevel = () => {
-    if (score / level > 500 && interval > 10) {
-        interval -= 10;
-        clearInterval(blockMover);
+    if (app.score / app.level > 500 && app.interval > 10) {
+        app.interval -= 10;
+        clearInterval(app.blockMover);
 
-        blockMover = setInterval(function() {
-            if (running) {
+        app.blockMover = setInterval(function() {
+            if (app.running) {
                 moveBlock('down');
             }
-        }, interval);
+        }, app.interval);
 
-        ++level;
-        document.getElementById('level').innerText = level;
+        ++app.level;
+        document.getElementById('level').innerText = app.level;
     }
 }
 
@@ -363,17 +366,17 @@ const endGame = () => {
     document.getElementById('pause-small').style.display = 'block';
 
     checkForHighScore();
-    clearInterval(blockMover);
+    clearInterval(app.blockMover);
 
-    running = false;
+    app.running = false;
 }
 
 const checkForHighScore = () => {
-    if (storage) {
+    if (app.storage) {
         let scorelist = document.getElementById('scorelist').getElementsByTagName('tbody')[0].getElementsByTagName('tr');
 
         for (let i = 0; i < scorelist.length; ++i) {
-            if (localStorage.getItem("score-" + i+1) < score) {
+            if (localStorage.getItem("score-" + i+1) < app.score) {
                 document.getElementById('newGame').disabled = true;
                 document.getElementById('nameBox').style.display = 'block';
                 break;
@@ -383,8 +386,8 @@ const checkForHighScore = () => {
 }
 
 const updateHighscores = () => {
-    if (storage) {
-        scores = [];
+    if (app.storage) {
+        app.scores = [];
         let added = false;
         let scorelist = document.getElementById('scorelist').getElementsByTagName('tbody')[0].getElementsByTagName('tr');
 
@@ -392,20 +395,20 @@ const updateHighscores = () => {
             let name = scorelist[i].getElementsByTagName('td')[1].innerText;
             let points = parseInt(scorelist[i].getElementsByTagName('td')[2].innerText);
 
-            if (!added && score > points) {
-                scores.push(playerName + ':' + score);
+            if (!added && app.score > points) {
+                app.scores.push(app.playerName + ':' + app.score);
                 added = true;
             }
 
-            scores.push(name + ':' + points);
+            app.scores.push(name + ':' + points);
         }
 
         for (let i = 0; i < scorelist.length; ++i) {
             let place = i + 1;
-            let name = scores[i].split(':')[0];
-            let scr = scores[i].split(':')[1];
+            let name = app.scores[i].split(':')[0];
+            let scr = app.scores[i].split(':')[1];
 
-            if (name === playerName) {
+            if (name === app.playerName) {
                 scorelist[i].getElementsByTagName('td')[0].className = 'place bold';
                 scorelist[i].getElementsByTagName('td')[1].className = 'name bold';
                 scorelist[i].getElementsByTagName('td')[2].className = 'score bold';
@@ -425,7 +428,7 @@ const updateHighscores = () => {
 }
 
 const setPlayerName = () => {
-    playerName = document.getElementById('playerName').value;
+    app.playerName = document.getElementById('playerName').value;
 
     updateHighscores();
 
@@ -433,13 +436,13 @@ const setPlayerName = () => {
 }
 
 const newGame = () => {
-    running = true;
-    score = 0;
-    level = 1;
-    interval = 750;
+    app.running = true;
+    app.score = 101;
+    app.level = 1;
+    app.interval = 750;
 
-    document.getElementById('score').innerText = score;
-    document.getElementById('level').innerText = level;
+    document.getElementById('score').innerText = app.score;
+    document.getElementById('level').innerText = app.level;
     document.getElementById('pause-big').style.display = 'none';
     document.getElementById('pause-small').style.display = 'none';
     
@@ -451,22 +454,22 @@ const newGame = () => {
         }
     }
 
-    clearInterval(blockMover);
+    clearInterval(app.blockMover);
     
-    blockMover = setInterval(function() {
-        if (running) {
+    app.blockMover = setInterval(function() {
+        if (app.running) {
             moveBlock('down');
         }
-    }, interval);
+    }, app.interval);
     
-    nextBlock = randomizeBlock();
-    showNext(nextBlock);
-    currentBlock = randomizeBlock();
-    bricks = spawnBlock(currentBlock);
+    app.nextBlock = randomizeBlock();
+    showNext(app.nextBlock);
+    app.currentBlock = randomizeBlock();
+    app.bricks = spawnBlock(app.currentBlock);
 }
 
 const pause = () => {
-    if (running) {
+    if (app.running) {
         document.getElementById('pausetext').innerText = 'paused';
         document.getElementById('pause-big').style.display = 'block';
         document.getElementById('pause-small').style.display = 'block';
@@ -475,7 +478,7 @@ const pause = () => {
         document.getElementById('pause-small').style.display = 'none';
     }
     
-    running = !running;
+    app.running = !app.running;
 }
 
 const sleep = (ms) => {
@@ -488,7 +491,7 @@ document.addEventListener("keydown", event => {
         return;
     }
 
-    if (running) {
+    if (app.running) {
         switch (event.keyCode) {
             case 16: rotateBlock('clockwise'); break;
             case 17: rotateBlock('counterclockwise'); break;
